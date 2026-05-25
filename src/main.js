@@ -25,27 +25,24 @@ form.addEventListener("submit", event => {
   showLoader();
 
   getImagesByQuery(searchQuery)
-    .then(response => {
-      const images = response.data.hits;
-
-      if (images.length === 0) {
-        iziToast.error({
-          message:
-            "Sorry, there are no images matching your search query. Please try again!",
-        });
-
-        return;
-      }
-
-      createGallery(images);
-    })
-    .catch(error => {
+  .then(images => {
+    if (images.length === 0) {
       iziToast.error({
-        message: "Something went wrong. Please try again!",
+        message:
+          "Sorry, there are no images matching your search query. Please try again!",
       });
-    })
-    .finally(() => {
-      hideLoader();
-      form.reset();
+
+      return;
+    }
+
+    createGallery(images);
+  })
+  .catch(error => {
+    iziToast.error({
+      message: "Something went wrong. Please try again!",
     });
-});
+  })
+  .finally(() => {
+    hideLoader();
+    form.reset();
+  });
