@@ -2,6 +2,7 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 import { getImagesByQuery } from "./js/pixabay-api";
+
 import {
   createGallery,
   clearGallery,
@@ -25,24 +26,25 @@ form.addEventListener("submit", event => {
   showLoader();
 
   getImagesByQuery(searchQuery)
-  .then(images => {
-    if (images.length === 0) {
+    .then(images => {
+      if (images.length === 0) {
+        iziToast.error({
+          message:
+            "Sorry, there are no images matching your search query. Please try again!",
+        });
+
+        return;
+      }
+
+      createGallery(images);
+    })
+    .catch(error => {
       iziToast.error({
-        message:
-          "Sorry, there are no images matching your search query. Please try again!",
+        message: "Something went wrong. Please try again!",
       });
-
-      return;
-    }
-
-    createGallery(images);
-  })
-  .catch(error => {
-    iziToast.error({
-      message: "Something went wrong. Please try again!",
+    })
+    .finally(() => {
+      hideLoader();
+      form.reset();
     });
-  })
-  .finally(() => {
-    hideLoader();
-    form.reset();
-  });
+});
